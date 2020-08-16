@@ -13,7 +13,6 @@ export default class Building {
         this.id = nanoid()
 
         this.stats = JSON.parse(JSON.stringify(config.buildings[type]))
-        this.baseStats = JSON.parse(JSON.stringify(config.buildings[type]))
 
         this.buildStartTime = Date.now()
         this.lastProduceTime = {}
@@ -98,6 +97,8 @@ export default class Building {
     ProduceMaterial(type){
         const material = this.stats.grow[type]
         const lastProduceTime = this.lastProduceTime[type]
+        const materialDependencies = this.config.materials[type].dependencies
+        console.log(materialDependencies)
 
         const now = Date.now()
 
