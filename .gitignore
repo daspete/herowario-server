@@ -1,0 +1,9 @@
+/node_modules
+/build
+/dist
+/.nuxt
+/yarn.lock
+/yarn-error.log
+.env
+.DS_Store
+sw.*

@@ -1,0 +1,19 @@
+{
+  "name": "herowarserver",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Das PeTe <daspetemail@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "helmet": "^4.0.0",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.1.12",
+    "socket.io": "^2.3.0",
+    "terminal-kit": "^1.42.0"
+  }
+}
