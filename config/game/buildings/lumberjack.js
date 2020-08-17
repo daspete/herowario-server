@@ -10,138 +10,34 @@ export default {
         {
             time: 5,
             cost: {
-                wood: 20,
-                blink: 30
+                wood: 30,
+                blink: 20
             },
             grow: {
                 wood: {
-                    amount: 15,
-                    time: 4
+                    amount: 25,
+                    time: 5
                 }
             }
         },
         {
-            time: 5,
+            time: 8,
             cost: {
-                wood: 40,
-                blink: 60
+                wood: 50,
+                blink: 40
             },
             grow: {
                 wood: {
-                    amount: 40,
-                    time: 4
+                    amount: 55,
+                    time: 6
                 }
             }
         },
-        {
-            time: 5,
-            cost: {
-                wood: 120,
-                blink: 180
-            },
-            grow: {
-                wood: {
-                    amount: 100,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 220,
-                blink: 300
-            },
-            grow: {
-                wood: {
-                    amount: 180,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 350,
-                blink: 450
-            },
-            grow: {
-                wood: {
-                    amount: 260,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 500,
-                blink: 600
-            },
-            grow: {
-                wood: {
-                    amount: 400,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 660,
-                blink: 820
-            },
-            grow: {
-                wood: {
-                    amount: 660,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 1280,
-                blink: 1600
-            },
-            grow: {
-                wood: {
-                    amount: 960,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 2580,
-                blink: 3200
-            },
-            grow: {
-                wood: {
-                    amount: 1950,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 5600,
-                blink: 8600
-            },
-            grow: {
-                wood: {
-                    amount: 3400,
-                    time: 4
-                }
-            }
-        }
     ],
     grow: {
         wood: {
-            time: 5,
-            amount: 3
+            time: 4,
+            amount: 6
         }
     },
 }

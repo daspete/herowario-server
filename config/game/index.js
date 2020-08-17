@@ -16,7 +16,8 @@ const gameConfig = {
     startMaterials: {
         blink: 100,
         stone: 50,
-        wood: 50
+        wood: 50,
+        copper: 10
     },
     materials,
     buildings

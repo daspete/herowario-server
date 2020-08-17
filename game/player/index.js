@@ -71,11 +71,24 @@ export default class Player {
         return true
     }
 
-    AddBuildingLevels({ amount, buildingId }){
-        let building = this.buildings.find((_building) => {
+    GetBuildingById(buildingId){
+        return this.buildings.find((_building) => {
             return _building.id == buildingId
         })
+    }
 
+    StopProductionInBuilding({ buildingId }){
+        let building = this.GetBuildingById(buildingId)
+        building.StopProduction()
+    }
+
+    StartProductionInBuilding({ buildingId }){
+        let building = this.GetBuildingById(buildingId)
+        building.StartProduction()
+    }
+
+    AddBuildingLevels({ amount, buildingId }){
+        let building = this.GetBuildingById(buildingId)
         building.AddLevels(amount)
     }
 

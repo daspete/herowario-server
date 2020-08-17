@@ -104,6 +104,14 @@ export default class Game {
             case 'building.level.add':
                 this.players[socket.id].AddBuildingLevels(data)
             break
+
+            case 'building.production.stop':
+                this.players[socket.id].StopProductionInBuilding(data)
+            break
+
+            case 'building.production.start':
+                this.players[socket.id].StartProductionInBuilding(data)
+            break
         }
 
             

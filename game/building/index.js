@@ -76,11 +76,11 @@ export default class Building {
         }
     }
 
-    StopProducing(){
+    StopProduction(){
         this.isProducing = false
     }
 
-    StartProducing(){
+    StartProduction(){
         this.isProducing = true
 
         this.ResetProduce()
@@ -95,17 +95,26 @@ export default class Building {
     }
 
     ProduceMaterial(type){
+        const now = Date.now()
+
+        const materialDependencies = this.config.materials[type].dependencies
+        const missingMaterials = this.player.HasEnoughMaterials(materialDependencies)
+
+        if(missingMaterials !== true) {
+            this.lastProduceTime[type] = now
+            return
+        }
+        
         const material = this.stats.grow[type]
         const lastProduceTime = this.lastProduceTime[type]
-        const materialDependencies = this.config.materials[type].dependencies
-        console.log(materialDependencies)
 
-        const now = Date.now()
 
         if(now - lastProduceTime >= material.time * 1000){
             if(typeof this.player.materials[type] == 'undefined'){
                 this.player.materials[type] = 0
             }
+
+            this.player.ReduceMaterials(materialDependencies)
 
             this.player.materials[type] += material.amount
             this.lastProduceTime[type] = Date.now()

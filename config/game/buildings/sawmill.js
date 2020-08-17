@@ -12,139 +12,35 @@ export default {
     },
     levels: [
         {
-            time: 5,
+            time: 6,
             cost: {
-                wood: 20,
-                blink: 30
+                wood: 30,
+                stone: 50
             },
             grow: {
-                blink: {
-                    amount: 15,
-                    time: 4
+                board: {
+                    amount: 3,
+                    time: 6
                 }
             }
         },
         {
-            time: 5,
+            time: 8,
             cost: {
-                wood: 40,
-                blink: 60
+                wood: 70,
+                stone: 120
             },
             grow: {
-                blink: {
-                    amount: 40,
-                    time: 4
+                board: {
+                    amount: 8,
+                    time: 6.5
                 }
             }
         },
-        {
-            time: 5,
-            cost: {
-                wood: 120,
-                blink: 180
-            },
-            grow: {
-                blink: {
-                    amount: 100,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 220,
-                blink: 300
-            },
-            grow: {
-                blink: {
-                    amount: 180,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 350,
-                blink: 450
-            },
-            grow: {
-                blink: {
-                    amount: 260,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 500,
-                blink: 600
-            },
-            grow: {
-                blink: {
-                    amount: 400,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 660,
-                blink: 820
-            },
-            grow: {
-                blink: {
-                    amount: 660,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 1280,
-                blink: 1600
-            },
-            grow: {
-                blink: {
-                    amount: 960,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 2580,
-                blink: 3200
-            },
-            grow: {
-                blink: {
-                    amount: 1950,
-                    time: 4
-                }
-            }
-        },
-        {
-            time: 5,
-            cost: {
-                wood: 5600,
-                blink: 8600
-            },
-            grow: {
-                blink: {
-                    amount: 3400,
-                    time: 4
-                }
-            }
-        }
     ],
     grow: {
         board: {
-            time: 5,
+            time: 4,
             amount: 1
         }
     },
