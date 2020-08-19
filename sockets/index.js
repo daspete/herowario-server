@@ -13,9 +13,7 @@ export default (io) => {
 
         socket.on('disconnect', () => { game.RemovePlayer(socket) })
 
-        socket.on('game.config', (callback) => {
-            callback(GameConfig())
-        })
+        socket.on('game.config', (callback) => { callback(GameConfig()) })
 
         socket.on('player.join', (playerData, callback) => { 
             game.AddPlayer(socket, playerData) 

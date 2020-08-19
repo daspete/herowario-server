@@ -2,6 +2,10 @@ import GameConfig from '~~/config/game'
 import Sleep from '~~/utils/Sleep'
 
 import Player from '~~/game/player'
+import Planet from '~~/game/planet'
+
+import { Scene, NullEngine, ArcRotateCamera, Vector3 } from 'babylonjs'
+import faker from 'faker'
 
 const config = GameConfig()
 
@@ -15,42 +19,82 @@ export default class Game {
         this.lastUpdateTime = Date.now()
         this.shouldSendUpdate = false
 
-        this.isRunning = true
+        this.engine = new NullEngine()
+        this.scene = new Scene(this.engine)
+        this.camera = new ArcRotateCamera('Camera', 0, 0.8, 100, Vector3.Zero(), this.scene)
+
+        this.planets = []
+        this.planetRange = 10000
+
+        this.CreatePlanets()
+    }
+
+    CreatePlanets(){
+        const planetCount = 500
+
+        faker.seed(1234567)
+
+        this.planets = []
+
+        for(let i = 0; i < planetCount; i++){
+            this.planets.push(new Planet({ 
+                game: this,
+                position: new Vector3(
+                    faker.random.number(-this.planetRange, this.planetRange),
+                    faker.random.number(-this.planetRange, this.planetRange),
+                    faker.random.number(-this.planetRange, this.planetRange)
+                )
+            }))
+        }
     }
 
     Stop(){
-        this.isRunning = false
+        this.engine.stopRenderLoop(this.Update)
     }
 
     async Start(){
-        while(this.isRunning){
+        this.Update = this.Update.bind(this)
+        this.engine.runRenderLoop(this.Update)
+
+        while(true){
             await Sleep(1000 / 10)
-            this.Update()
+            this.NetworkUpdate()
         }
     }
 
     async Update(){
+        const dt = this.engine.getDeltaTime()
+
+        for(let i = 0; i < this.planets.length; i++) this.planets[i].Update(dt)
+
+        const socketIds = Object.keys(this.sockets)
+        for(let i = 0; i < socketIds.length; i++){
+            this.players[socketIds[i]].Update(dt)
+        }
+
+        this.scene.render()
+    }
+
+    async NetworkUpdate(){
         const now = Date.now()
         const dt = (now - this.lastUpdateTime) / 1000
         this.lastUpdateTime = now
 
-        let socketIds = Object.keys(this.sockets)
-        for(let i = 0; i < socketIds.length; i++){
-            let player = this.players[socketIds[i]]
-            player.Update(dt)
-        }
-
-
+        // let socketIds = Object.keys(this.sockets)
+        // for(let i = 0; i < socketIds.length; i++){
+        //     let player = this.players[socketIds[i]]
+        //     player.Update(dt)
+        // }
 
         if(this.shouldSendUpdate){
-            socketIds = Object.keys(this.sockets)
+            let socketIds = Object.keys(this.sockets)
             for(let i = 0; i < socketIds.length; i++){
                 let socket = this.sockets[socketIds[i]]
                 let player = this.players[socketIds[i]]
 
                 socket.emit('game.update', this.GetUpdateData(player))
 
-                player.LateUpdate()
+                player.LateNetworkUpdate()
             }
 
             this.shouldSendUpdate = false
@@ -65,8 +109,22 @@ export default class Game {
         this.players[socket.id] = new Player({
             game: this,
             id: socket.id,
+            socket,
             username,
-            userId
+            userId,
+            position: new Vector3(
+                faker.random.number(-this.planetRange * 0.5, this.planetRange * 0.5),
+                faker.random.number(-this.planetRange * 0.5, this.planetRange * 0.5),
+                faker.random.number(-this.planetRange * 0.5, this.planetRange * 0.5)
+            )
+        })
+
+        socket.on('planets', (callback) => {
+            const planets = this.planets.map((planet) => {
+                return planet.Data
+            })
+
+            callback(planets)
         })
     }
 
@@ -95,24 +153,35 @@ export default class Game {
     PlayerInput(socket, { type, data }){
         if(!this.players[socket.id]) return
 
-        
+        const player = this.players[socket.id]
+
         switch(type){
-            case 'building.add':
-                this.players[socket.id].AddBuilding(data.type)
+            case 'keyboard':
+                player.OnKey(data)
             break
 
-            case 'building.level.add':
-                this.players[socket.id].AddBuildingLevels(data)
-            break
-
-            case 'building.production.stop':
-                this.players[socket.id].StopProductionInBuilding(data)
-            break
-
-            case 'building.production.start':
-                this.players[socket.id].StartProductionInBuilding(data)
+            case 'pointer':
+                player.OnPointer(data)
             break
         }
+        
+        // switch(type){
+        //     case 'building.add':
+        //         this.players[socket.id].AddBuilding(data.type)
+        //     break
+
+        //     case 'building.level.add':
+        //         this.players[socket.id].AddBuildingLevels(data)
+        //     break
+
+        //     case 'building.production.stop':
+        //         this.players[socket.id].StopProductionInBuilding(data)
+        //     break
+
+        //     case 'building.production.start':
+        //         this.players[socket.id].StartProductionInBuilding(data)
+        //     break
+        // }
 
             
         

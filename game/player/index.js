@@ -1,3 +1,12 @@
+import { 
+    Vector3, 
+    AbstractMesh,
+    Axis,
+    Quaternion,
+    Space,
+    KeyboardEventTypes
+} from 'babylonjs'
+
 import Building from '~~/game/building'
 import GameConfig from '~~/config/game'
 import Sleep from '~~/utils/Sleep'
@@ -5,25 +14,107 @@ import Sleep from '~~/utils/Sleep'
 const config = GameConfig()
 
 export default class Player {
-    constructor({ game, id, username, userId }){
+    constructor({ game, id, socket, username, userId, position }){
         this.game = game
         this.id = id
+        this.socket = socket
         this.userId = userId
         this.username = username
         this.config = config
         this.materials = JSON.parse(JSON.stringify(this.config.startMaterials))
         this.buildings = []
 
+        // this.mesh = Mesh.CreateSphere(`player-${ this.id }`, 2, 1, this.game.scene)
+        this.mesh = new AbstractMesh(`player-${ this.id }`, this.game.scene)
+        this.mesh.player = this
+        this.mesh.position = position
+
+        this.stats = {
+            hp: 1000,
+            speed: 1,
+        }
+
+        this.moveSpeed = 1
+        this.rollSpeed = 0.01
+
+        this.tmpQuaternion = new Quaternion()
+        this.moveVector = new Vector3(0, 0, 0)
+        this.rotationVector = new Vector3(0, 0, 0)
+
+        this.moveState = {
+            forward: 0,
+            x: 0,
+            y: 0
+        }
+
         console.log(`created player ${ username } ${ userId }`)
     }
 
-    Update(dt){
-        for(let i = 0; i < this.buildings.length; i++){
-            this.buildings[i].Update(dt)
+    OnKey({ type, key }){
+        switch(type){
+            case KeyboardEventTypes.KEYDOWN:
+                switch(key){
+                    case 'w':
+                    case 'ArrowUp':
+                        this.moveState.forward = 1
+                    break
+
+                    case 's':
+                    case 'ArrowDown':
+                        this.moveState.forward = -1
+                    break
+                }
+            break
+
+            case KeyboardEventTypes.KEYUP:
+                switch(key){
+                    case 'w':
+                    case 'ArrowUp':
+                    case 's':
+                    case 'ArrowDown':
+                        this.moveState.forward = 0
+                    break
+                }
+            break
         }
     }
 
-    LateUpdate(){}
+    OnPointer({ type, x, y, canvas }){
+        this.moveState.x = -2.0 * x / canvas.width + 1
+        this.moveState.y = -2.0 * y / canvas.height + 1
+    }
+
+    Update(dt){
+        this.moveVector.z = this.moveState.forward
+
+        this.rotationVector.y = -this.moveState.x
+        this.rotationVector.x = -this.moveState.y
+
+        const moveSpeed = this.moveSpeed
+        const rotationSpeed = this.rollSpeed
+
+        this.mesh.translate(this.moveVector, moveSpeed, Space.LOCAL)
+
+        this.tmpQuaternion.set(
+            this.rotationVector.x * rotationSpeed,
+            this.rotationVector.y * rotationSpeed,
+            this.rotationVector.z * rotationSpeed,
+            1
+        ).normalize()
+
+        this.mesh.rotate(Axis.Y, this.tmpQuaternion.y, Space.LOCAL)
+        this.mesh.rotate(Axis.X, this.tmpQuaternion.x, Space.LOCAL)
+        this.mesh.rotate(Axis.Z, this.tmpQuaternion.z, Space.LOCAL)
+
+        // console.log(Object.keys(this.mesh))
+
+        // for(let i = 0; i < this.buildings.length; i++){
+        //     this.buildings[i].Update(dt)
+        // }
+        
+    }
+
+    LateNetworkUpdate(){}
 
     HasEnoughMaterials(neededMaterials){
         const materials = Object.keys(neededMaterials)
@@ -95,6 +186,9 @@ export default class Player {
     get Data(){
         return {
             id: this.id,
+            stats: this.stats,
+            position: this.mesh.position,
+            rotationQuaternion: this.mesh.rotationQuaternion,
             userId: this.userId,
             username: this.username,
             materials: this.materials,
