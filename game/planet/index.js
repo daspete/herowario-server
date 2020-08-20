@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 
 
 export default class Planet {
-    constructor({ game, position }){
+    constructor({ game, position, stats }){
         this.game = game
         this.id = nanoid()
 
@@ -11,13 +11,7 @@ export default class Planet {
         this.mesh.planet = this
         this.mesh.position = position
 
-        this.resources = {
-            wood: 1000000000,
-            stone: 1000000000,
-            blink: 1000000000,
-            copper: 1000000000,
-            quartz: 1000000000
-        }
+        this.stats = stats
 
         this.owner = null
     }
@@ -31,7 +25,7 @@ export default class Planet {
             id: this.id,
             owner: this.owner?.Data,
             position: this.mesh.position,
-            resources: this.resources
+            stats: this.stats
         }
     }
 }

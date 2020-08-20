@@ -24,13 +24,13 @@ export default class Game {
         this.camera = new ArcRotateCamera('Camera', 0, 0.8, 100, Vector3.Zero(), this.scene)
 
         this.planets = []
-        this.planetRange = 10000
+        this.planetRange = 100000
 
         this.CreatePlanets()
     }
 
     CreatePlanets(){
-        const planetCount = 500
+        const planetCount = 800
 
         faker.seed(1234567)
 
@@ -43,7 +43,16 @@ export default class Game {
                     faker.random.number(-this.planetRange, this.planetRange),
                     faker.random.number(-this.planetRange, this.planetRange),
                     faker.random.number(-this.planetRange, this.planetRange)
-                )
+                ),
+                stats: {
+                    size: faker.random.number(150, 1000),
+                    resources: {
+                        wood: faker.random.number(50000000, 100000000),
+                        stone: faker.random.number(50000000, 100000000),
+                        blink: faker.random.number(50000000, 100000000),
+                        copper: faker.random.number(50000000, 100000000),
+                    }
+                }
             }))
         }
     }
@@ -57,7 +66,7 @@ export default class Game {
         this.engine.runRenderLoop(this.Update)
 
         while(true){
-            await Sleep(1000 / 10)
+            await Sleep(1000 / 12)
             this.NetworkUpdate()
         }
     }

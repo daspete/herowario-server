@@ -14,8 +14,9 @@ import Sleep from '~~/utils/Sleep'
 const config = GameConfig()
 
 export default class Player {
-    constructor({ game, id, socket, username, userId, position }){
+    constructor({ game, id, socket, username, userId, position, mode = 'space' }){
         this.game = game
+        this.mode = mode
         this.id = id
         this.socket = socket
         this.userId = userId
@@ -34,7 +35,7 @@ export default class Player {
             speed: 1,
         }
 
-        this.moveSpeed = 1
+        this.moveSpeed = 20
         this.rollSpeed = 0.01
 
         this.tmpQuaternion = new Quaternion()
@@ -43,6 +44,8 @@ export default class Player {
 
         this.moveState = {
             forward: 0,
+            sideward: 0,
+            upward: 0,
             x: 0,
             y: 0
         }
@@ -63,6 +66,24 @@ export default class Player {
                     case 'ArrowDown':
                         this.moveState.forward = -1
                     break
+
+                    case 'a':
+                    case 'ArrowLeft':
+                        this.moveState.sideward = -1
+                    break
+
+                    case 'd':
+                    case 'ArrowRight':
+                        this.moveState.sideward = 1
+                    break
+
+                    case 'Shift':
+                        this.moveState.upward = 1
+                    break
+
+                    case 'Control':
+                        this.moveState.upward = -1
+                    break
                 }
             break
 
@@ -74,6 +95,18 @@ export default class Player {
                     case 'ArrowDown':
                         this.moveState.forward = 0
                     break
+
+                    case 'a':
+                    case 'ArrowLeft':
+                    case 'd':
+                    case 'ArrowRight':
+                        this.moveState.sideward = 0
+                    break
+
+                    case 'Shift':
+                    case 'Control':
+                        this.moveState.upward = 0
+                    break
                 }
             break
         }
@@ -82,23 +115,28 @@ export default class Player {
     OnPointer({ type, x, y, canvas }){
         this.moveState.x = -2.0 * x / canvas.width + 1
         this.moveState.y = -2.0 * y / canvas.height + 1
+
+        if(this.moveState.x >= -0.1 && this.moveState.x <= 0.1) this.moveState.x = 0
+        if(this.moveState.y >= -0.1 && this.moveState.y <= 0.1) this.moveState.y = 0
+
+        this.moveState.x = Math.round(this.moveState.x * 1000) / 1000
+        this.moveState.y = Math.round(this.moveState.y * 1000) / 1000
     }
 
     Update(dt){
         this.moveVector.z = this.moveState.forward
+        this.moveVector.y = this.moveState.upward
+        this.moveVector.x = this.moveState.sideward
 
         this.rotationVector.y = -this.moveState.x
         this.rotationVector.x = -this.moveState.y
-
-        const moveSpeed = this.moveSpeed
-        const rotationSpeed = this.rollSpeed
-
-        this.mesh.translate(this.moveVector, moveSpeed, Space.LOCAL)
+        
+        this.mesh.translate(this.moveVector, this.moveSpeed, Space.LOCAL)
 
         this.tmpQuaternion.set(
-            this.rotationVector.x * rotationSpeed,
-            this.rotationVector.y * rotationSpeed,
-            this.rotationVector.z * rotationSpeed,
+            this.rotationVector.x * this.rollSpeed,
+            this.rotationVector.y * this.rollSpeed,
+            this.rotationVector.z * this.rollSpeed,
             1
         ).normalize()
 
@@ -184,11 +222,26 @@ export default class Player {
     }
 
     get Data(){
+        if(this.mode == 'space'){
+            return {
+                id: this.id,
+                position: this.mesh.position,
+                rotationQuaternion: this.mesh.rotationQuaternion,
+                moveVector: this.moveVector,
+                rotationVector: this.rotationVector,
+                userId: this.userId,
+                username: this.username,
+            }
+        }
+
+        
         return {
             id: this.id,
             stats: this.stats,
             position: this.mesh.position,
             rotationQuaternion: this.mesh.rotationQuaternion,
+            moveVector: this.moveVector,
+            rotationVector: this.rotationVector,
             userId: this.userId,
             username: this.username,
             materials: this.materials,
