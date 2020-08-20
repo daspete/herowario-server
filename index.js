@@ -2,21 +2,28 @@ import 'dotenv/config'
 
 import os from 'os'
 import http from 'http'
-import cluster from 'cluster'
 import morgan from 'morgan'
+import cluster from 'cluster'
+import passport from 'passport'
+
 import express from '~~/services/express'
 import socketio from '~~/services/socketio'
+import graphql from '~~/services/graphql'
+import authentication from '~~/services/authentication'
 
 import corsConfig from '~~/config/cors'
 import expressConfig from '~~/config/express'
+import authConfig from '~~/config/auth'
 
 import routes from '~~/routes'
-import sockets from '~~/sockets'
+// import sockets from '~~/sockets'
 
 const isDevMode = !(process.env.NODE_ENV == 'production')
 const clusterEnabled = process.env.CLUSTER_ENABLED == 'true' && !isDevMode
 
 const RunApp = async () => {
+    authentication(authConfig)
+    
     const app = express({
         express: expressConfig,
         cors: corsConfig
@@ -36,19 +43,23 @@ const RunApp = async () => {
         }
     }))
 
+    app.use(passport.initialize())
+
     app.use(routes)
+    
+    
 
     // create main HTTP server
     const server = http.createServer(app)
 
+    app.use('/graph', graphql.middleware)
+
     // create SocketIO server
-    socketio({
-        server,
-        sockets
-    })
+    // socketio({ server, sockets })
 
     // Start HTTP server
     server.listen(expressConfig.port, expressConfig.ip, () => {
+        graphql.StartSubscriptions(server)
         console.log(`Server is listening on ${ expressConfig.ip }:${ expressConfig.port }`)
     })
 }

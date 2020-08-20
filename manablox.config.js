@@ -23,10 +23,10 @@ module.exports = {
             alias: aliases
         }
 
-        // config.module.rules.push({
-        //     test: /\.vue$/,
-        //     loader: 'vue-loader',
-        // })
+        config.module.rules.push({
+            test: /\.(graphql|gql)$/,
+            loader: 'graphql-tag/loader'
+        })
 
         return config
     }

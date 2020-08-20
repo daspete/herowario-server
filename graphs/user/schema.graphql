@@ -1,0 +1,66 @@
+scalar Date
+
+type Query {
+    Users(
+        limit: Int
+        skip: Int
+    ): [User]
+
+    UserById(
+        id: ID!
+    ): User
+}
+
+type Subscription {
+    UserLoggedIn: User
+    # UserDisconnected: User
+}
+
+type Mutation {
+    Login(
+        email: String!
+        password: String!
+    ): UserToken
+
+    CreateUser(
+        data: UserInput!
+    ): User
+
+    UpdateUser(
+        id: ID!
+        data: UserInput!
+    ): User
+
+    DeleteUser(
+        id: ID!
+    ): User
+}
+
+type User {
+    _id: ID
+    status: String
+    gender: String
+    title: String
+    firstname: String
+    lastname: String
+    username: String
+    email: String
+    createdAt: Date
+    updatedAt: Date
+}
+
+type UserToken {
+    token: String
+}
+
+
+input UserInput {
+    status: String
+    gender: String
+    title: String
+    firstname: String
+    lastname: String
+    username: String
+    email: String
+    password: String
+}

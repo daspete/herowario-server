@@ -32,10 +32,10 @@ export default class Player {
 
         this.stats = {
             hp: 1000,
-            speed: 1,
+            speed: 5,
         }
 
-        this.moveSpeed = 20
+        this.moveSpeed = this.stats.speed
         this.rollSpeed = 0.01
 
         this.tmpQuaternion = new Quaternion()
@@ -234,7 +234,7 @@ export default class Player {
             }
         }
 
-        
+
         return {
             id: this.id,
             stats: this.stats,
