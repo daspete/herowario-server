@@ -1,0 +1,53 @@
+scalar Date
+
+type Query {
+    Games(
+        limit: Int
+        skip: Int
+    ): [Game]
+
+    GameById(
+        id: ID!
+    ): Game
+
+    GameByName(
+        name: String!
+    ): Game
+}
+
+type Subscription {
+    GameCreated: Game
+    GameUpdated: Game
+    GameDeleted: Game
+}
+
+type Mutation {
+    CreateGame(
+        data: GameInput!
+    ): Game
+
+    UpdateGame(
+        id: ID!
+        data: GameInput!
+    ): Game
+
+    DeleteGame(
+        id: ID!
+    ): Game
+}
+
+type Game {
+    _id: ID
+    name: String
+    status: String
+    galaxy: Galaxy
+    createdAt: Date
+    updatedAt: Date
+}
+
+
+input GameInput {
+    name: String
+    galaxy: ID
+    status: String
+}

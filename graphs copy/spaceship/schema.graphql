@@ -1,0 +1,52 @@
+scalar Date
+
+type Query {
+    Spaceships(
+        limit: Int
+        skip: Int
+    ): [Spaceship]
+
+    SpaceshipById(
+        id: ID!
+    ): Spaceship
+
+    SpaceshipByName(
+        name: String!
+    ): Spaceship
+}
+
+type Subscription {
+    SpaceshipCreated: Spaceship
+    SpaceshipUpdated: Spaceship
+    SpaceshipDeleted: Spaceship
+}
+
+type Mutation {
+    CreateSpaceship(
+        data: SpaceshipInput!
+    ): Spaceship
+
+    UpdateSpaceship(
+        id: ID!
+        data: SpaceshipInput!
+    ): Spaceship
+
+    DeleteSpaceship(
+        id: ID!
+    ): Spaceship
+}
+
+type Spaceship {
+    _id: ID
+    name: String
+    position: Vector3
+    createdAt: Date
+    updatedAt: Date
+}
+
+
+input SpaceshipInput {
+    name: String
+    position: Vector3Input
+}
+

@@ -2,7 +2,6 @@ import DatabaseProvider from '~~/services/database/provider'
 
 export default class Provider {
     constructor(collectionName){
-        this.context = null
         this.databaseProvider = new DatabaseProvider({ collection: collectionName })
         console.log(`registered ${ collectionName } provider`)
     }

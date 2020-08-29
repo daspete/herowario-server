@@ -5,9 +5,12 @@ import * as typeDefs from './schema.graphql'
 
 import GameProvider from './provider'
 
-import UserProvider from '~~/graphs/user/provider'
+import GalaxyProvider from '~~/graphs/galaxy/provider'
 
-import UserGraph from '~~/graphs/user'
+import GalaxyGraph from '~~/graphs/galaxy'
+
+
+
 
 const graph = new GraphQLModule({
     typeDefs,
@@ -17,12 +20,12 @@ const graph = new GraphQLModule({
         return {
             ...context,
             GameProvider,
-            UserProvider
+            GalaxyProvider
         }
     },
 
     imports: [
-        UserGraph
+        GalaxyGraph
     ],
 })
 

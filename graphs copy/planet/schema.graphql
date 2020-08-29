@@ -1,0 +1,53 @@
+scalar Date
+
+type Query {
+    Planets(
+        limit: Int
+        skip: Int
+    ): [Planet]
+
+    PlanetById(
+        id: ID!
+    ): Planet
+
+    PlanetByName(
+        name: String!
+    ): Planet
+}
+
+type Subscription {
+    PlanetCreated: Planet
+    PlanetUpdated: Planet
+    PlanetDeleted: Planet
+}
+
+type Mutation {
+    CreatePlanet(
+        data: PlanetInput!
+    ): Planet
+
+    UpdatePlanet(
+        id: ID!
+        data: PlanetInput!
+    ): Planet
+
+    DeletePlanet(
+        id: ID!
+    ): Planet
+}
+
+type Planet {
+    _id: ID
+    name: String
+    size: Int
+    position: Vector3
+    createdAt: Date
+    updatedAt: Date
+}
+
+
+input PlanetInput {
+    name: String
+    size: Int
+    position: Vector3Input
+}

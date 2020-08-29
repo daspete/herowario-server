@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt'
 
 import { UserInputError } from 'apollo-server-express'
-import { ObjectId } from 'mongodb'
 
 import Authorize from '~~/services/authorize'
 
@@ -39,10 +38,6 @@ export default {
 
             return await UserProvider.FindById(id)
         },
-
-        async Me(root, args, { UserProvider, user }){
-            return await UserProvider.FindOne({ filter: { _id: new ObjectId(user._id), email: user.email } })
-        }
     },
 
     Subscription: {

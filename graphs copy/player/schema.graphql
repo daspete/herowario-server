@@ -1,0 +1,88 @@
+scalar Date
+
+type Query {
+    Players(
+        limit: Int
+        skip: Int
+    ): [Player]
+
+    PlayerById(
+        id: ID!
+    ): Player
+
+    PlayerByName(
+        name: String!
+    ): Player
+}
+
+type Subscription {
+    PlayerCreated: Player
+    PlayerUpdated: Player
+    PlayerDeleted: Player
+}
+
+type Mutation {
+    CreatePlayer(
+        data: PlayerInput!
+    ): Player
+
+    UpdatePlayer(
+        id: ID!
+        data: PlayerInput!
+    ): Player
+
+    DeletePlayer(
+        id: ID!
+    ): Player
+}
+
+type Player {
+    _id: ID
+    name: String
+    user: User
+    planets: [Planet]
+    game: Game
+    spaceships: [Spaceship]
+    status: String
+    createdAt: Date
+    updatedAt: Date
+}
+
+
+input PlayerInput {
+    name: String
+    user: ID
+    planets: [ID]
+    game: ID
+    spaceships: [ID]
+    status: String
+}
+
+
+
+
+extend type Planet {
+    owner: Player
+}
+
+extend input PlanetInput {
+    owner: ID
+}
+
+
+extend type Game {
+    players: [Player]
+}
+
+extend input GameInput {
+    players: [ID]
+}
+
+
+extend type Spaceship {
+    owner: Player
+}
+
+extend input SpaceshipInput {
+    owner: ID
+}

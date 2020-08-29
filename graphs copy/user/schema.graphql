@@ -9,8 +9,6 @@ type Query {
     UserById(
         id: ID!
     ): User
-
-    Me: User
 }
 
 type Subscription {

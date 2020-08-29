@@ -3,11 +3,10 @@ import { GraphQLModule } from '@graphql-modules/core'
 import resolvers from './resolvers'
 import * as typeDefs from './schema.graphql'
 
-import GameProvider from './provider'
+import PlanetProvider from './provider'
 
-import UserProvider from '~~/graphs/user/provider'
+import CommonGraph from '~~/graphs/common'
 
-import UserGraph from '~~/graphs/user'
 
 const graph = new GraphQLModule({
     typeDefs,
@@ -16,13 +15,12 @@ const graph = new GraphQLModule({
     context(context){
         return {
             ...context,
-            GameProvider,
-            UserProvider
+            PlanetProvider,
         }
     },
 
     imports: [
-        UserGraph
+        CommonGraph
     ],
 })
 

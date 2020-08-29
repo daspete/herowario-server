@@ -6,6 +6,6 @@ class DataProvider extends Provider {
     }
 }
 
-const provider = new DataProvider('games')
+const provider = new DataProvider('users')
 
 export default provider

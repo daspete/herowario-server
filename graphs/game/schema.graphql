@@ -1,66 +1,79 @@
 scalar Date
+scalar Float
+
+
+
 
 type Query {
-    Users(
-        limit: Int
-        skip: Int
-    ): [User]
-
-    UserById(
-        id: ID!
-    ): User
+    Game: Game
 }
+
 
 type Subscription {
-    UserLoggedIn: User
-    # UserDisconnected: User
+    GameUpdate: Game
 }
+
 
 type Mutation {
-    Login(
-        email: String!
-        password: String!
-    ): UserToken
-
-    CreateUser(
-        data: UserInput!
-    ): User
-
-    UpdateUser(
-        id: ID!
-        data: UserInput!
-    ): User
-
-    DeleteUser(
-        id: ID!
-    ): User
+    MoveSpaceship(
+        playerId: ID!
+        spaceshipId: ID!
+        direction: Vector3Input!
+    ): Boolean
 }
 
-type User {
+
+
+type Game {
     _id: ID
-    status: String
-    gender: String
-    title: String
-    firstname: String
-    lastname: String
-    username: String
-    email: String
-    createdAt: Date
-    updatedAt: Date
-}
-
-type UserToken {
-    token: String
+    name: String
+    galaxy: Galaxy
+    players: [Player]
 }
 
 
-input UserInput {
-    status: String
-    gender: String
-    title: String
-    firstname: String
-    lastname: String
-    username: String
-    email: String
-    password: String
+type Galaxy {
+    _id: ID
+    name: String
+    planets: [Planet]
+}
+
+type Planet {
+    _id: ID
+    name: String
+    position: Vector3
+}
+
+
+type Player {
+    _id: ID
+    name: String
+    user: User
+    spaceships: [Spaceship]
+    planets: [Planet]
+    online: Boolean
+}
+
+
+type Spaceship {
+    _id: ID
+    name: String
+    position: Vector3
+}
+
+
+type Planet {
+    _id: ID
+}
+
+
+type Vector3 {
+    x: Float
+    y: Float
+    z: Float
+}
+input Vector3Input {
+    x: Float
+    y: Float
+    z: Float
 }

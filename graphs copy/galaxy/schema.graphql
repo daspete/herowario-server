@@ -1,0 +1,53 @@
+scalar Date
+
+type Query {
+    Galaxies(
+        limit: Int
+        skip: Int
+    ): [Galaxy]
+
+    GalaxyById(
+        id: ID!
+    ): Galaxy
+
+    GalaxyByName(
+        name: String!
+    ): Galaxy
+}
+
+type Subscription {
+    GalaxyCreated: Galaxy
+    GalaxyUpdated: Galaxy
+    GalaxyDeleted: Galaxy
+}
+
+type Mutation {
+    CreateGalaxy(
+        data: GalaxyInput!
+    ): Galaxy
+
+    UpdateGalaxy(
+        id: ID!
+        data: GalaxyInput!
+    ): Galaxy
+
+    DeleteGalaxy(
+        id: ID!
+    ): Galaxy
+}
+
+type Galaxy {
+    _id: ID
+    name: String
+    planets: [Planet]
+    status: String
+    createdAt: Date
+    updatedAt: Date
+}
+
+
+input GalaxyInput {
+    name: String
+    planets: [ID]
+    status: String
+}

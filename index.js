@@ -7,7 +7,7 @@ import cluster from 'cluster'
 import passport from 'passport'
 
 import express from '~~/services/express'
-import socketio from '~~/services/socketio'
+// import socketio from '~~/services/socketio'
 import graphql from '~~/services/graphql'
 import authentication from '~~/services/authentication'
 

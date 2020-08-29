@@ -3,14 +3,18 @@ import { ApolloServer } from 'apollo-server-express'
 import { GraphQLModule } from '@graphql-modules/core'
 import { SubscriptionServer } from 'subscriptions-transport-ws'
 import { execute, subscribe } from 'graphql'
+import jwt from 'jsonwebtoken'
 
 import passport from 'passport'
-import http from 'http'
 
-import UserGraph from '~~/graphs/user'
+import authConfig from '~~/config/auth'
+
+import GameGraph from '~~/graphs/game'
+
 
 const router = new Router()
 
+import UserProvider from '~~/graphs/user/provider'
 
 // Auth middleware
 router.use('/', (req, res, next) => {
@@ -21,15 +25,12 @@ router.use('/', (req, res, next) => {
 })
 
 const { schema, schemaDirectives, context } = new GraphQLModule({
-    imports: [
-        UserGraph
-    ],
+    imports: [ GameGraph ],
     schemaDirectives: {}
 })
 
 const graphQLServer = new ApolloServer({
     schema,
-    debug: process.env.NODE_ENV !== 'production',
     uploads: { 
         // maxFileSize: filesConfig.maxFileSize,
         // maxFiles: filesConfig.maxFiles
@@ -41,8 +42,11 @@ const graphQLServer = new ApolloServer({
             ...context
         }
     },
-    introspection: true,
 
+    introspection: process.env.NODE_ENV !== 'production',
+    playground: process.env.NODE_ENV !== 'production',
+    debug: process.env.NODE_ENV !== 'production',
+    
     plugins: [
         
     ],
@@ -60,14 +64,16 @@ graphQLServer.applyMiddleware({
 export default {
     middleware: router,
     StartSubscriptions(server){
-        // graphQLServer.installSubscriptionHandlers(server)
-
         new SubscriptionServer({
             execute,
             subscribe,
             schema,
             onConnect: (params, socket) => {
-                console.log('bla', params)
+                if(params.authorization){
+                    const token = params.authorization.replace('Bearer ', '')
+                    const tokenValue = jwt.verify(token, authConfig.secret)
+                    return { user: tokenValue.user }
+                }
             }
         }, {
             server: server,

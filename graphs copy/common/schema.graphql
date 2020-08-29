@@ -1,0 +1,13 @@
+scalar Float
+
+type Vector3 {
+    x: Float
+    y: Float
+    z: Float
+}
+
+input Vector3Input {
+    x: Float
+    y: Float
+    z: Float
+}
